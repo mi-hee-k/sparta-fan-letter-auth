@@ -1,0 +1,34 @@
+[
+  {
+    "createdAt": "2023. 11. 03. 오후 02:07:09",
+    "nickname": "고죠 사토루",
+    "avatar": "https://mblogthumb-phinf.pstatic.net/MjAyMDExMTZfMTgz/MDAxNjA1NDUzMDU1NDc5.O4BYsyyrGODr3l0d_hF-9PXdU6iSs-Cnn_6WN_8zDIwg.jtWDkxAr2ETM1UERW8FcmreoBe_ZNu5Rs8edvRf9Ls4g.PNG.o_o192/0.png?type=w800",
+    "content": "괜찮아 내가 최강이니까",
+    "writedTo": "고죠",
+    "id": "1"
+  },
+  {
+    "createdAt": "2023. 11. 02. 오후 23:13:18",
+    "nickname": "이타도리 유지",
+    "avatar": "https://i.pinimg.com/236x/60/a9/1a/60a91a14ee106cc5eae1995a496de2e0.jpg",
+    "content": "내가 죽을 때의 일은 모르겠지만, 살아가는 방식때문에 후회하고 싶진 않아",
+    "writedTo": "이타도리",
+    "id": "2"
+  },
+  {
+    "createdAt": "2023. 11. 02. 오후 09:25:37",
+    "nickname": "후시구로 메구미",
+    "avatar": "https://i.namu.wiki/i/xa5H0SF-vnDUIwtdSLSEohshCDo8VADPj6wong_-I3ozE_q5Y_cDW0cg_ED00CxbZZYDxLj0ZSABhPkEjsRP9w.webp",
+    "content": "나는 불평등하게 사람들을 구하겠다",
+    "writedTo": "메구미",
+    "id": "3"
+  },
+  {
+    "createdAt": "2023. 11. 02. 오후 04:13:18",
+    "nickname": "쿠기사키 노바라",
+    "avatar": "https://media.bunjang.co.kr/product/238614821_1_1696846817_w360.jpg",
+    "content": "목숨 걸 수 있어! 내가 나 자신으로 남기 위해!",
+    "writedTo": "노바라",
+    "id": "4"
+  }
+]
