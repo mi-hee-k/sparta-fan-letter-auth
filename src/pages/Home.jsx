@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -9,11 +9,34 @@ import FanLetterList from 'components/Home/FanLetterList';
 import Tab from 'components/Home/Tab';
 import Button from 'components/UI/Button';
 import styled from 'styled-components';
-// import axios from 'axios';
+import axios from 'axios';
+import { addUserInfo } from 'redux/modules/UserInfo';
 
 const Home = () => {
   const selectedMember = useSelector((state) => state.SelectedMember);
   const dispatch = useDispatch();
+  const [loginUserInfo, setLoginUserInfo] = useState({});
+
+  const fetchData = async () => {
+    const accessToken = JSON.parse(localStorage.getItem('key')).accessToken;
+    const response = await axios.get(
+      'https://moneyfulpublicpolicy.co.kr/user',
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    dispatch(addUserInfo(response.data));
+    setLoginUserInfo(response.data);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  console.log(loginUserInfo);
 
   const [expand, setExpand] = useState(true);
   const [inputs, setInputs] = useState({
@@ -50,10 +73,7 @@ const Home = () => {
   // 팬레터 추가함수
   const submitHandler = (e) => {
     e.preventDefault();
-    if (
-      inputs.nickname.trim().length === 0 ||
-      inputs.content.trim().length === 0
-    ) {
+    if (inputs.content.trim().length === 0) {
       alert('닉네임과 내용을 입력해주세요');
       return;
     }
@@ -65,7 +85,7 @@ const Home = () => {
     const currentDate = new Date();
     const newFanLetter = {
       createdAt: formattedDate(currentDate),
-      nickname: inputs.nickname,
+      nickname: loginUserInfo.nickname,
       avatar:
         'https://global.discourse-cdn.com/turtlehead/optimized/2X/c/c830d1dee245de3c851f0f88b6c57c83c69f3ace_2_250x250.png',
       content: inputs.content,
@@ -104,6 +124,7 @@ const Home = () => {
       <Tab clickHandler={clickHandler} selectedMember={selectedMember} />
       {/* 팬레터 등록 */}
       <AddFanLetter
+        loginUserInfo={loginUserInfo}
         inputs={inputs}
         submitHandler={submitHandler}
         inputChangeHandler={inputChangeHandler}

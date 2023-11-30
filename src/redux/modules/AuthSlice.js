@@ -1,13 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = { value: true };
+const initialState = { isLogin: false };
 
 const AuthSlice = createSlice({
-  name: 'loginState',
+  name: 'auth',
   initialState,
   reducers: {
     loginToggle: (state, action) => {
-      state.value = !state.value;
+      state.isLogin = !state.isLogin;
     },
   },
 });

@@ -2,13 +2,18 @@ import React from 'react';
 import styled from 'styled-components';
 import Button from 'components/UI/Button';
 
-const AddFanLetter = ({ inputs, submitHandler, inputChangeHandler }) => {
+const AddFanLetter = ({
+  inputs,
+  submitHandler,
+  inputChangeHandler,
+  loginUserInfo,
+}) => {
   return (
     <ScFormGroup>
       <ScForm onSubmit={submitHandler}>
         <ScInputGroup>
           <label htmlFor='nickname'>닉네임</label>
-          <input
+          {/* <input
             type='text'
             placeholder='최대 20글자까지 작성할 수 있습니다'
             maxLength={20}
@@ -16,7 +21,8 @@ const AddFanLetter = ({ inputs, submitHandler, inputChangeHandler }) => {
             name='nickname'
             value={inputs.nickname}
             onChange={inputChangeHandler}
-          />
+          /> */}
+          <span>{loginUserInfo.nickname}</span>
         </ScInputGroup>
         <ScInputGroup>
           <label htmlFor='content'>내용</label>

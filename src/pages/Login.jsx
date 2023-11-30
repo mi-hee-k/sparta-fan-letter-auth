@@ -2,12 +2,15 @@ import axios from 'axios';
 import Button from 'components/UI/Button';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { loginToggle } from 'redux/modules/AuthSlice';
+import { addUserInfo } from 'redux/modules/UserInfo';
 import styled from 'styled-components';
 
 const Login = () => {
-  const loginState = useSelector((state) => state.loginState.value);
+  const loginState = useSelector((state) => state.auth.isLogin);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [inputs, setInputs] = useState({
     id: '',
@@ -78,8 +81,10 @@ const Login = () => {
         'https://moneyfulpublicpolicy.co.kr/login',
         userInfo
       );
-      localStorage.setItem('key', data.accessToken);
+      localStorage.setItem('key', JSON.stringify(data));
       console.log(data);
+      dispatch(addUserInfo(data));
+      navigate('/home');
     } catch (error) {
       console.log(error.message);
     }
