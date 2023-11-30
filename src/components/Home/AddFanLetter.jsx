@@ -44,7 +44,7 @@ const AddFanLetter = ({ inputs, submitHandler, inputChangeHandler }) => {
             <option value='노바라'>노바라</option>
           </select>
         </ScInputGroup>
-        <Button>팬레터 등록</Button>
+        <Button type='submit'>팬레터 등록</Button>
       </ScForm>
     </ScFormGroup>
   );

@@ -3,7 +3,7 @@ import Button, { HomeBtn } from 'components/UI/Button';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteHandler, editHandler } from 'redux/modules/FanLetters';
+import { deleteHandler, editHandler } from 'redux/modules/FanLettersSlice';
 import ImgGroup from 'components/UI/ImgGroup';
 
 const Details = () => {

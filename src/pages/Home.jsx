@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 
-import { addHandler } from 'redux/modules/FanLetters';
-import { selectHandler } from 'redux/modules/SelectedMember';
+import { addHandler } from 'redux/modules/FanLettersSlice';
+import { selectHandler } from 'redux/modules/SelectedMemberSlice';
 import AddFanLetter from 'components/Home/AddFanLetter';
 import FanLetterList from 'components/Home/FanLetterList';
 import Tab from 'components/Home/Tab';

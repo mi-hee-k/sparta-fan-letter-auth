@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import FanLetterItem from './FanLetterItem';
 import { useDispatch, useSelector } from 'react-redux';
-import { setFanLetters } from 'redux/modules/FanLetters';
+import { setFanLetters } from 'redux/modules/FanLettersSlice';
 
 const FanLetterList = () => {
   const dispatch = useDispatch();

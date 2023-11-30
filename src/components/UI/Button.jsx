@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Btn = styled.button`
+const Btn = styled.button.attrs((props) => ({ type: props.type }))`
   background-color: #f2522e;
   border: none;
   width: 20%;
@@ -29,9 +29,9 @@ const HomeBtn = styled(Btn)`
   background-color: #f2bf27;
 `;
 
-const Button = ({ children, onClick, $active }) => {
+const Button = ({ children, onClick, $active, type }) => {
   return (
-    <Btn onClick={onClick} $active={$active}>
+    <Btn type={type} onClick={onClick} $active={$active}>
       {children}
     </Btn>
   );
