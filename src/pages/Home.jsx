@@ -9,6 +9,7 @@ import FanLetterList from 'components/Home/FanLetterList';
 import Tab from 'components/Home/Tab';
 import Button from 'components/UI/Button';
 import styled from 'styled-components';
+// import axios from 'axios';
 
 const Home = () => {
   const selectedMember = useSelector((state) => state.SelectedMember);
