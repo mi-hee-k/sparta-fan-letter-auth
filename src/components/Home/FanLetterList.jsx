@@ -1,24 +1,19 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import FanLetterItem from './FanLetterItem';
-import { useDispatch, useSelector } from 'react-redux';
-import { setFanLetters } from 'redux/modules/FanLettersSlice';
+import { useSelector } from 'react-redux';
+// import { setFanLetters } from 'redux/modules/FanLettersSlice';
+// import axios from 'axios';
 
-const FanLetterList = () => {
-  const dispatch = useDispatch();
-  let fanLetters = useSelector((state) => state.fanLetters);
+const FanLetterList = ({ fanLetters }) => {
+  // const dispatch = useDispatch();
+  // let fanLetters = useSelector((state) => state.fanLetters);
+
   const selectedMember = useSelector((state) => state.selectedMember);
   const filteredLetters = fanLetters.filter((item) =>
     selectedMember !== '전체' ? item.writedTo === selectedMember : true
   );
-
-  useEffect(() => {
-    const storedFanLetters = JSON.parse(localStorage.getItem('fanLetters'));
-    if (storedFanLetters) {
-      dispatch(setFanLetters(storedFanLetters));
-    }
-  }, [dispatch]);
 
   return (
     <ScFanLetterItems>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 
-import { addHandler } from 'redux/modules/FanLettersSlice';
+// import { addHandler } from 'redux/modules/FanLettersSlice';
 import { selectHandler } from 'redux/modules/SelectedMemberSlice';
 import AddFanLetter from 'components/Home/AddFanLetter';
 import FanLetterList from 'components/Home/FanLetterList';
@@ -10,33 +10,27 @@ import Tab from 'components/Home/Tab';
 import Button from 'components/UI/Button';
 import styled from 'styled-components';
 import axios from 'axios';
-import { addUserInfo } from 'redux/modules/UserInfo';
+import { setFanLetters } from 'redux/modules/FanLettersSlice';
+import Header from 'components/UI/Header';
 
 const Home = () => {
   const selectedMember = useSelector((state) => state.SelectedMember);
+  const fanLetters = useSelector((state) => state.fanLetters);
+  const loginUserInfo = useSelector((state) => state.auth.profile);
   const dispatch = useDispatch();
-  const [loginUserInfo, setLoginUserInfo] = useState({});
+  // const [fanLetters, setFanLetters] = useState([]);
 
-  const fetchData = async () => {
-    const accessToken = JSON.parse(localStorage.getItem('key')).accessToken;
-    const response = await axios.get(
-      'https://moneyfulpublicpolicy.co.kr/user',
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-    dispatch(addUserInfo(response.data));
-    setLoginUserInfo(response.data);
+  console.log(loginUserInfo);
+
+  // 최신 팬레터 리스트 가져오기
+  const fetchFanLetters = async () => {
+    const response = await axios.get('http://localhost:5000/letters');
+    dispatch(setFanLetters(response.data));
   };
 
   useEffect(() => {
-    fetchData();
+    fetchFanLetters();
   }, []);
-
-  console.log(loginUserInfo);
 
   const [expand, setExpand] = useState(true);
   const [inputs, setInputs] = useState({
@@ -71,7 +65,7 @@ const Home = () => {
   };
 
   // 팬레터 추가함수
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
     if (inputs.content.trim().length === 0) {
       alert('닉네임과 내용을 입력해주세요');
@@ -91,9 +85,13 @@ const Home = () => {
       content: inputs.content,
       writedTo: inputs.writedTo,
       id: uuidv4(),
+      userId: loginUserInfo.id,
     };
 
-    dispatch(addHandler(newFanLetter));
+    await axios.post('http://localhost:5000/letters', newFanLetter);
+
+    dispatch(setFanLetters([...fanLetters, newFanLetter]));
+
     setInputs({
       nickname: '',
       content: '',
@@ -121,6 +119,7 @@ const Home = () => {
   return (
     <main>
       {/* 멤버별 팬레터 보기 */}
+      <Header />
       <Tab clickHandler={clickHandler} selectedMember={selectedMember} />
       {/* 팬레터 등록 */}
       <AddFanLetter
@@ -134,7 +133,7 @@ const Home = () => {
         <Button onClick={expandToggler}>📣 りょういきてんかい --- !!! </Button>
       </ScExpandGroup>
       {/* 팬레터 */}
-      {expand && <FanLetterList />}
+      {expand && <FanLetterList fanLetters={fanLetters} />}
     </main>
   );
 };

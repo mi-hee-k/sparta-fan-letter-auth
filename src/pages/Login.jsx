@@ -1,17 +1,16 @@
 import axios from 'axios';
 import Button from 'components/UI/Button';
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { loginToggle } from 'redux/modules/AuthSlice';
-import { addUserInfo } from 'redux/modules/UserInfo';
+import { login } from 'redux/modules/AuthSlice';
 import styled from 'styled-components';
 
 const Login = () => {
-  const loginState = useSelector((state) => state.auth.isLogin);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [loginState, setLoginState] = useState(false);
   const [inputs, setInputs] = useState({
     id: '',
     password: '',
@@ -19,8 +18,7 @@ const Login = () => {
   });
 
   const toggleHandler = () => {
-    dispatch(loginToggle(loginState));
-    // setIsLogin((isLogin) => !isLogin);
+    setLoginState((isLogin) => !isLogin);
   };
 
   const inputHandler = (e) => {
@@ -30,27 +28,24 @@ const Login = () => {
     });
   };
 
-  // const submitHandler = (e) => {
-  //   e.preventDefault();
-
-  //   // 유효성 검사
-  //   var regId = /^[a-zA-Z]{4,10}$/;
-  //   var regPw = /^[a-zA-Z0-9]{4,15}$/;
-  //   var regNickname = /^[a-zA-Z가-힣0-9]{1,10}$/;
-  //   if (!loginState && (!regId.test(inputs.id) || !regPw.test(inputs.pw))) {
-  //     console.log('no');
-  //   }
-  //   if (
-  //     loginState &&
-  //     (!regId.test(inputs.id) ||
-  //       !regPw.test(inputs.pw) ||
-  //       !regNickname.test(inputs.nickname))
-  //   ) {
-  //     console.log('no');
-  //   }
-
-  //   //
-  // };
+  const regCheck = () => {
+    // 유효성 검사
+    var regId = /^[a-zA-Z]{4,10}$/;
+    var regPw = /^[a-zA-Z0-9]{4,15}$/;
+    var regNickname = /^[a-zA-Z가-힣0-9]{1,10}$/;
+    if (!loginState && (!regId.test(inputs.id) || !regPw.test(inputs.pw))) {
+      return false;
+    }
+    if (
+      loginState &&
+      (!regId.test(inputs.id) ||
+        !regPw.test(inputs.pw) ||
+        !regNickname.test(inputs.nickname))
+    ) {
+      return false;
+    }
+    return true;
+  };
 
   const registerHandler = async () => {
     const newUser = {
@@ -59,14 +54,19 @@ const Login = () => {
       nickname: inputs.nickname,
     };
 
+    if (regCheck()) {
+      // ...
+    }
+
     try {
-      const response = await axios.post(
-        'https://moneyfulpublicpolicy.co.kr/register',
-        newUser
-      );
-      console.log(response);
+      await axios.post('https://moneyfulpublicpolicy.co.kr/register', newUser);
+      setLoginState((loginState) => !loginState);
+      setInputs({
+        id: '',
+        password: '',
+      });
     } catch (error) {
-      console.log(error);
+      alert(error.response.data.message);
     }
   };
 
@@ -81,18 +81,17 @@ const Login = () => {
         'https://moneyfulpublicpolicy.co.kr/login',
         userInfo
       );
-      localStorage.setItem('key', JSON.stringify(data));
-      console.log(data);
-      dispatch(addUserInfo(data));
-      navigate('/home');
+      dispatch(login(data));
+      navigate('/');
     } catch (error) {
-      console.log(error.message);
+      alert(error.response.data.message);
     }
   };
 
   return (
     <ScFormWrapper>
-      <>
+      <ScForm>
+        <h1>{loginState ? '회원가입' : '로그인'}</h1>
         <div>
           <label htmlFor='id'>아이디</label>
           <input
@@ -137,12 +136,20 @@ const Login = () => {
         <span onClick={toggleHandler}>
           {loginState ? '로그인' : '회원가입'}
         </span>
-      </>
+      </ScForm>
     </ScFormWrapper>
   );
 };
 
-const ScFormWrapper = styled.form`
+const ScFormWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+`;
+
+const ScForm = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -150,11 +157,16 @@ const ScFormWrapper = styled.form`
   background-color: #eee;
   border-radius: 10px;
   width: 50%;
+
   margin: 0 auto;
   padding: 30px;
 
+  h1 {
+    margin-bottom: 30px;
+  }
+
   div {
-    margin-bottom: 10px;
+    margin-bottom: 20px;
   }
 
   label {
@@ -168,9 +180,13 @@ const ScFormWrapper = styled.form`
     border-radius: 10px;
   }
 
+  button:first-child {
+    margin-bottom: 30px;
+  }
+
   button {
     width: 30%;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
   }
 
   span {

@@ -1,19 +1,28 @@
 import React from 'react';
-import { Link, Outlet } from 'react-router-dom';
-import Header from './Header';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from 'redux/modules/AuthSlice';
 
 const Layout = () => {
+  const isLogin = useSelector((state) => state.auth.isLogin);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const logoutHandler = () => {
+    dispatch(logout());
+    navigate('login');
+  };
   return (
     <>
-      <ScNavBar>
-        <Link to='/'>Home</Link>
-        <div>
-          <Link to='/profile'>내 프로필</Link>
-          <span>로그아웃</span>
-        </div>
-      </ScNavBar>
-      <Header />
+      {isLogin && (
+        <ScNavBar>
+          <Link to='/'>Home</Link>
+          <div>
+            <Link to='/profile'>내 프로필</Link>
+            <span onClick={logoutHandler}>로그아웃</span>
+          </div>
+        </ScNavBar>
+      )}
       <main>
         <Outlet />
       </main>

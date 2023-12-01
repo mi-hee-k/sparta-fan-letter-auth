@@ -3,11 +3,13 @@ import Button, { HomeBtn } from 'components/UI/Button';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteHandler, editHandler } from 'redux/modules/FanLettersSlice';
+import { setFanLetters } from 'redux/modules/FanLettersSlice';
 import ImgGroup from 'components/UI/ImgGroup';
+import axios from 'axios';
 
 const Details = () => {
   const fanLetters = useSelector((state) => state.fanLetters);
+  const userInfo = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const editInputRef = useRef();
@@ -17,17 +19,34 @@ const Details = () => {
   const [editInputShown, setEditInputShown] = useState(false);
   const [editInput, setEditInput] = useState('');
 
-  const delete_Handler = (id) => {
+  const selectedFanLetter = fanLetters.find((item) => item.id === id);
+
+  console.log(selectedFanLetter);
+  console.log(userInfo);
+
+  // 서버에서 삭제
+  const deletePost = async (id) => {
+    await axios.delete(`http://localhost:5000/letters/${id}`);
+  };
+
+  // 삭제
+  const delete_Handler = async () => {
     if (window.confirm('정말 삭제하시겠습니까?')) {
-      dispatch(deleteHandler(id));
+      await deletePost(id);
       navigate('/');
     }
     return;
   };
 
-  // 팬레터 수정 함수
+  // 서버에서 수정
+  const editPost = async (id) => {
+    await axios.patch(`http://localhost:5000/letters/${id}`, {
+      content: editInput,
+    });
+  };
+
+  // 수정
   const edit_Handler = () => {
-    const selectedFanLetter = fanLetters.find((item) => item.id === id);
     setEditInputShown((editInputShown) => !editInputShown);
 
     // 수정상태가 아니라면 기존의 content 보여주기
@@ -46,8 +65,20 @@ const Details = () => {
 
     // 수정상태라면 textarea 보여주고 바뀐 content만 update 하기
     if (editInputShown) {
-      window.confirm('이대로 수정하시겠습니까?');
-      dispatch(editHandler({ id, editInput }));
+      if (window.confirm('이대로 수정하시겠습니까?')) {
+        editPost(id);
+        dispatch(
+          setFanLetters(
+            fanLetters.map((letter) =>
+              letter.id === id ? { ...letter, content: editInput } : letter
+            )
+          )
+        );
+      } else {
+        setEditInputShown(false);
+        setEditInput(selectedFanLetter.content);
+      }
+      // dispatch(editHandler({ id, editInput }));
     }
   };
 
@@ -91,12 +122,14 @@ const Details = () => {
                     <textarea disabled defaultValue={item.content} />
                   )}
                 </ScFanLetterBody>
-                <ScFanLetterBtnGroup>
-                  <Button onClick={edit_Handler}>
-                    {editInputShown ? '수정완료' : '수정'}
-                  </Button>
-                  <Button onClick={() => delete_Handler(id)}>삭제</Button>
-                </ScFanLetterBtnGroup>
+                {selectedFanLetter.userId === userInfo.id && (
+                  <ScFanLetterBtnGroup>
+                    <Button onClick={edit_Handler}>
+                      {editInputShown ? '수정완료' : '수정'}
+                    </Button>
+                    <Button onClick={() => delete_Handler(id)}>삭제</Button>
+                  </ScFanLetterBtnGroup>
+                )}
               </ScDetailsItem>
               <HomeBtn onClick={() => navigate('/')}>홈으로</HomeBtn>
             </ScDetailsItems>
