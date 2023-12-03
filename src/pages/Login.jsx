@@ -1,9 +1,11 @@
-import axios from 'axios';
+import api from '../axios/api';
 import Button from 'components/UI/Button';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { login } from 'redux/modules/AuthSlice';
+import { toast } from 'react-toastify';
+
 import styled from 'styled-components';
 
 const Login = () => {
@@ -66,19 +68,37 @@ const Login = () => {
       !regPw.test(inputs.password) ||
       !regNickname.test(inputs.nickname)
     ) {
-      alert('회원가입 돌아가');
       return;
     }
 
     try {
-      await axios.post('https://moneyfulpublicpolicy.co.kr/register', newUser);
+      await api.post('/register', newUser);
       setLoginState((loginState) => !loginState);
       setInputs({
         id: '',
         password: '',
       });
+      toast.success('🙆‍♀️ 회원가입 성공!', {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
     } catch (error) {
-      alert(error.response.data.message);
+      toast.error(error.response.data.message, {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
     }
   };
 
@@ -98,14 +118,30 @@ const Login = () => {
     }
 
     try {
-      const { data } = await axios.post(
-        'https://moneyfulpublicpolicy.co.kr/login',
-        userInfo
-      );
+      const { data } = await api.post('/login', userInfo);
       dispatch(login(data));
+      toast.success('🙆‍♀️ 로그인 성공!', {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
       navigate('/');
     } catch (error) {
-      alert(error.response.data.message);
+      toast.error(error.response.data.message, {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
     }
   };
 

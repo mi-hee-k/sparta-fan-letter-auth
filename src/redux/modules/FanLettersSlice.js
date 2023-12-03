@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+import jsonApi from '../../axios/jsonApi';
 
 const initialState = {
   fanLetters: [],
@@ -12,12 +12,10 @@ export const __getFanLetter = createAsyncThunk(
   'getFanLetter',
   async (payload, thunkAPI) => {
     try {
-      const { data } = await axios.get('http://localhost:5000/letters');
-      console.log(data);
+      const { data } = await jsonApi.get('/letters');
       return thunkAPI.fulfillWithValue(data);
     } catch (error) {
-      console.log(error);
-      return thunkAPI.rejectWithValue();
+      return thunkAPI.rejectWithValue(error);
     }
   }
 );
@@ -26,15 +24,10 @@ export const __addFanLetter = createAsyncThunk(
   'addFanLetter',
   async (payload, thunkAPI) => {
     try {
-      const { data } = await axios.post(
-        'http://localhost:5000/letters',
-        payload
-      );
-      console.log(data);
+      const { data } = await jsonApi.post('/letters', payload);
       return thunkAPI.fulfillWithValue(data);
     } catch (error) {
-      console.log(error);
-      return thunkAPI.rejectWithValue();
+      return thunkAPI.rejectWithValue(error);
     }
   }
 );
@@ -43,15 +36,12 @@ export const __editFanLetter = createAsyncThunk(
   'editFanLetter',
   async (payload, thunkAPI) => {
     try {
-      const { data } = await axios.patch(
-        `http://localhost:5000/letters/${payload.id}`,
-        { content: payload.content }
-      );
-      console.log(data);
+      const { data } = await jsonApi.patch(`/letters/${payload.id}`, {
+        content: payload.content,
+      });
       return thunkAPI.fulfillWithValue(data);
     } catch (error) {
-      console.log(error);
-      return thunkAPI.rejectWithValue();
+      return thunkAPI.rejectWithValue(error);
     }
   }
 );
@@ -60,14 +50,10 @@ export const __deleteFanLetter = createAsyncThunk(
   'deleteFanLetter',
   async (payload, thunkAPI) => {
     try {
-      const { data } = await axios.delete(
-        `http://localhost:5000/letters/${payload}`
-      );
-      console.log(data);
+      const { data } = await jsonApi.delete(`/letters/${payload}`);
       return thunkAPI.fulfillWithValue(data);
     } catch (error) {
-      console.log(error);
-      return thunkAPI.rejectWithValue();
+      return thunkAPI.rejectWithValue(error);
     }
   }
 );

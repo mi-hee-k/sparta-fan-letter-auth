@@ -7,6 +7,7 @@ import {
   __deleteFanLetter,
   __editFanLetter,
 } from 'redux/modules/FanLettersSlice';
+import { toast } from 'react-toastify';
 import ImgGroup from 'components/UI/ImgGroup';
 
 const Details = () => {
@@ -48,7 +49,16 @@ const Details = () => {
       editInputShown &&
       editInput.trim() === selectedFanLetter.content.trim()
     ) {
-      alert('수정할 내용이 없습니다.');
+      toast.warn('수정할 내용이 없습니다', {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
       return;
     }
 
@@ -62,6 +72,16 @@ const Details = () => {
             content: editInput,
           })
         );
+        toast.success('수정되었습니다', {
+          position: 'top-center',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
       } else {
         setEditInputShown(false);
         setEditInput(selectedFanLetter.content);

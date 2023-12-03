@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
+import { toast } from 'react-toastify';
 
 import { selectHandler } from 'redux/modules/SelectedMemberSlice';
 import AddFanLetter from 'components/Home/AddFanLetter';
@@ -60,11 +61,29 @@ const Home = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     if (inputs.content.trim().length === 0) {
-      alert('닉네임과 내용을 입력해주세요');
+      toast.warn('닉네임과 내용을 입력해주세요', {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
       return;
     }
     if (inputs.writedTo === '' || inputs.writedTo === '전체') {
-      alert('멤버를 선택해주세요');
+      toast.warn('멤버를 선택해주세요', {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
       return;
     }
 

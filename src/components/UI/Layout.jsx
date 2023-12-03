@@ -10,7 +10,7 @@ const Layout = () => {
   const navigate = useNavigate();
   const logoutHandler = () => {
     dispatch(logout());
-    navigate('login');
+    navigate('/');
   };
   return (
     <>
