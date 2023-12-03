@@ -6,12 +6,6 @@ import { createSlice } from '@reduxjs/toolkit';
 const accessToken = localStorage.getItem('accessToken');
 const profile = localStorage.getItem('profile');
 
-// falsy value => undefined, null, 0, ""
-
-// !(undefined) = true
-// !!(undefined) = false
-// !!(뭔가) = 뭔가가 falsy -> false, 뭔가가 not falsy -> true
-
 const initialState = {
   isLogin: !!accessToken,
   profile: JSON.parse(profile) || {

@@ -28,7 +28,7 @@ const Router = () => {
         ) : (
           <>
             <Route path='/' element={<Layout />}>
-              <Route path='/login' element={<Login />} />
+              <Route path='/' element={<Login />} />
               <Route path='*' element={<Navigate replace to={'/login'} />} />
             </Route>
           </>

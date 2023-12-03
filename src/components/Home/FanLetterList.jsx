@@ -7,9 +7,6 @@ import { useSelector } from 'react-redux';
 // import axios from 'axios';
 
 const FanLetterList = ({ fanLetters }) => {
-  // const dispatch = useDispatch();
-  // let fanLetters = useSelector((state) => state.fanLetters);
-
   const selectedMember = useSelector((state) => state.selectedMember);
   const filteredLetters = fanLetters.filter((item) =>
     selectedMember !== '전체' ? item.writedTo === selectedMember : true

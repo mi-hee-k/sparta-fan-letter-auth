@@ -29,9 +29,9 @@ const HomeBtn = styled(Btn)`
   background-color: #f2bf27;
 `;
 
-const Button = ({ children, onClick, $active, type }) => {
+const Button = ({ children, onClick, $active, type, disabled }) => {
   return (
-    <Btn type={type} onClick={onClick} $active={$active}>
+    <Btn type={type} onClick={onClick} $active={$active} disabled={disabled}>
       {children}
     </Btn>
   );

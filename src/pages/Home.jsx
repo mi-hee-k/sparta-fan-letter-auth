@@ -2,34 +2,26 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 
-// import { addHandler } from 'redux/modules/FanLettersSlice';
 import { selectHandler } from 'redux/modules/SelectedMemberSlice';
 import AddFanLetter from 'components/Home/AddFanLetter';
 import FanLetterList from 'components/Home/FanLetterList';
 import Tab from 'components/Home/Tab';
 import Button from 'components/UI/Button';
 import styled from 'styled-components';
-import axios from 'axios';
-import { setFanLetters } from 'redux/modules/FanLettersSlice';
+
+import { __addFanLetter, __getFanLetter } from 'redux/modules/FanLettersSlice';
 import Header from 'components/UI/Header';
 
 const Home = () => {
   const selectedMember = useSelector((state) => state.SelectedMember);
-  const fanLetters = useSelector((state) => state.fanLetters);
+  const { fanLetters, isLoading, error } = useSelector(
+    (state) => state.fanLetters
+  );
   const loginUserInfo = useSelector((state) => state.auth.profile);
   const dispatch = useDispatch();
-  // const [fanLetters, setFanLetters] = useState([]);
-
-  console.log(loginUserInfo);
-
-  // 최신 팬레터 리스트 가져오기
-  const fetchFanLetters = async () => {
-    const response = await axios.get('http://localhost:5000/letters');
-    dispatch(setFanLetters(response.data));
-  };
 
   useEffect(() => {
-    fetchFanLetters();
+    dispatch(__getFanLetter());
   }, []);
 
   const [expand, setExpand] = useState(true);
@@ -87,11 +79,7 @@ const Home = () => {
       id: uuidv4(),
       userId: loginUserInfo.id,
     };
-
-    await axios.post('http://localhost:5000/letters', newFanLetter);
-
-    dispatch(setFanLetters([...fanLetters, newFanLetter]));
-
+    dispatch(__addFanLetter(newFanLetter));
     setInputs({
       nickname: '',
       content: '',

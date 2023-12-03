@@ -11,6 +11,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const [loginState, setLoginState] = useState(false);
+  const [isValid, setIsValid] = useState(false);
   const [inputs, setInputs] = useState({
     id: '',
     password: '',
@@ -22,31 +23,37 @@ const Login = () => {
   };
 
   const inputHandler = (e) => {
+    const { name, value } = e.target;
+    const { id, password, nickname } = inputs;
+
+    if (loginState) {
+      // 회원가입 시 유효성 검사
+      if (id.length === 0 || password.length === 0 || nickname.length === 0) {
+        setIsValid(true);
+      } else {
+        setIsValid(false);
+      }
+    } else {
+      // 로그인 시 유효성 검사
+      if (id.length === 0 || password.length === 0) {
+        setIsValid(true);
+      } else {
+        setIsValid(false);
+      }
+    }
+
     setInputs({
       ...inputs,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
   };
 
-  const regCheck = () => {
-    // 유효성 검사
-    var regId = /^[a-zA-Z]{4,10}$/;
-    var regPw = /^[a-zA-Z0-9]{4,15}$/;
-    var regNickname = /^[a-zA-Z가-힣0-9]{1,10}$/;
-    if (!loginState && (!regId.test(inputs.id) || !regPw.test(inputs.pw))) {
-      return false;
-    }
-    if (
-      loginState &&
-      (!regId.test(inputs.id) ||
-        !regPw.test(inputs.pw) ||
-        !regNickname.test(inputs.nickname))
-    ) {
-      return false;
-    }
-    return true;
-  };
+  // 유효성 검사
+  let regId = /^[a-zA-Z]{4,10}$/;
+  let regPw = /^[a-zA-Z0-9]{4,15}$/;
+  let regNickname = /^[a-zA-Z가-힣0-9]{1,10}$/;
 
+  // 회원가입
   const registerHandler = async () => {
     const newUser = {
       id: inputs.id,
@@ -54,8 +61,13 @@ const Login = () => {
       nickname: inputs.nickname,
     };
 
-    if (regCheck()) {
-      // ...
+    if (
+      !regId.test(inputs.id) ||
+      !regPw.test(inputs.password) ||
+      !regNickname.test(inputs.nickname)
+    ) {
+      alert('회원가입 돌아가');
+      return;
     }
 
     try {
@@ -70,11 +82,20 @@ const Login = () => {
     }
   };
 
+  // 로그인
   const loginHandler = async () => {
     const userInfo = {
       id: inputs.id,
       password: inputs.password,
     };
+
+    if (
+      !loginState &&
+      (!regId.test(inputs.id) || !regPw.test(inputs.password))
+    ) {
+      console.log('로그인 돌아가');
+      return;
+    }
 
     try {
       const { data } = await axios.post(
@@ -125,11 +146,11 @@ const Login = () => {
           </div>
         )}
         {loginState ? (
-          <Button type='button' onClick={registerHandler}>
+          <Button type='button' onClick={registerHandler} disabled={isValid}>
             회원가입
           </Button>
         ) : (
-          <Button type='button' onClick={loginHandler}>
+          <Button type='button' onClick={loginHandler} disabled={isValid}>
             로그인
           </Button>
         )}

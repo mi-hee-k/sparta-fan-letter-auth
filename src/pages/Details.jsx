@@ -3,12 +3,18 @@ import Button, { HomeBtn } from 'components/UI/Button';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { setFanLetters } from 'redux/modules/FanLettersSlice';
+import {
+  __deleteFanLetter,
+  __editFanLetter,
+  setFanLetters,
+} from 'redux/modules/FanLettersSlice';
 import ImgGroup from 'components/UI/ImgGroup';
 import axios from 'axios';
 
 const Details = () => {
-  const fanLetters = useSelector((state) => state.fanLetters);
+  const { fanLetters, isLoading, error } = useSelector(
+    (state) => state.fanLetters
+  );
   const userInfo = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -21,28 +27,13 @@ const Details = () => {
 
   const selectedFanLetter = fanLetters.find((item) => item.id === id);
 
-  console.log(selectedFanLetter);
-  console.log(userInfo);
-
-  // 서버에서 삭제
-  const deletePost = async (id) => {
-    await axios.delete(`http://localhost:5000/letters/${id}`);
-  };
-
   // 삭제
   const delete_Handler = async () => {
     if (window.confirm('정말 삭제하시겠습니까?')) {
-      await deletePost(id);
+      await dispatch(__deleteFanLetter(id));
       navigate('/');
     }
     return;
-  };
-
-  // 서버에서 수정
-  const editPost = async (id) => {
-    await axios.patch(`http://localhost:5000/letters/${id}`, {
-      content: editInput,
-    });
   };
 
   // 수정
@@ -66,19 +57,17 @@ const Details = () => {
     // 수정상태라면 textarea 보여주고 바뀐 content만 update 하기
     if (editInputShown) {
       if (window.confirm('이대로 수정하시겠습니까?')) {
-        editPost(id);
+        // editPost(id);
         dispatch(
-          setFanLetters(
-            fanLetters.map((letter) =>
-              letter.id === id ? { ...letter, content: editInput } : letter
-            )
-          )
+          __editFanLetter({
+            id,
+            content: editInput,
+          })
         );
       } else {
         setEditInputShown(false);
         setEditInput(selectedFanLetter.content);
       }
-      // dispatch(editHandler({ id, editInput }));
     }
   };
 
