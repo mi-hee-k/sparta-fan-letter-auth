@@ -6,10 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   __deleteFanLetter,
   __editFanLetter,
-  setFanLetters,
 } from 'redux/modules/FanLettersSlice';
 import ImgGroup from 'components/UI/ImgGroup';
-import axios from 'axios';
 
 const Details = () => {
   const { fanLetters, isLoading, error } = useSelector(
