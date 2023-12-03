@@ -113,12 +113,11 @@ const Login = () => {
       !loginState &&
       (!regId.test(inputs.id) || !regPw.test(inputs.password))
     ) {
-      console.log('로그인 돌아가');
       return;
     }
 
     try {
-      const { data } = await api.post('/login', userInfo);
+      const { data } = await api.post('/login?expiresIn=10m', userInfo);
       dispatch(login(data));
       toast.success('🙆‍♀️ 로그인 성공!', {
         position: 'top-center',
