@@ -117,7 +117,7 @@ const Login = () => {
     }
 
     try {
-      const { data } = await api.post('/login?expiresIn=10m', userInfo);
+      const { data } = await api.post('/login', userInfo);
       dispatch(login(data));
       toast.success('🙆‍♀️ 로그인 성공!', {
         position: 'top-center',
