@@ -103,7 +103,8 @@ const Login = () => {
   };
 
   // 로그인
-  const loginHandler = async () => {
+  const loginHandler = async (e) => {
+    e.preventDefault();
     const userInfo = {
       id: inputs.id,
       password: inputs.password,
@@ -185,7 +186,11 @@ const Login = () => {
             회원가입
           </Button>
         ) : (
-          <Button type='button' onClick={loginHandler} disabled={isValid}>
+          <Button
+            type='submit'
+            onClick={(e) => loginHandler(e)}
+            disabled={isValid}
+          >
             로그인
           </Button>
         )}
