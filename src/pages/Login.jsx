@@ -56,7 +56,8 @@ const Login = () => {
   let regNickname = /^[a-zA-Z가-힣0-9]{1,10}$/;
 
   // 회원가입
-  const registerHandler = async () => {
+  const registerHandler = async (e) => {
+    e.preventDefault();
     const newUser = {
       id: inputs.id,
       password: inputs.password,
@@ -113,7 +114,8 @@ const Login = () => {
   };
 
   // 로그인
-  const loginHandler = async () => {
+  const loginHandler = async (e) => {
+    e.preventDefault();
     const userInfo = {
       id: inputs.id,
       password: inputs.password,
@@ -157,7 +159,7 @@ const Login = () => {
   return (
     <ScFormWrapper>
       {loginState ? (
-        <ScForm>
+        <ScForm onSubmit={registerHandler}>
           <h1>회원가입</h1>
           <div>
             <label htmlFor='id'>아이디</label>
@@ -189,13 +191,11 @@ const Login = () => {
               placeholder='영문, 숫자, 한글(1~10글자)'
             />
           </div>
-          <Button type='button' onClick={registerHandler} disabled={isValid}>
-            회원가입
-          </Button>
+          <Button disabled={isValid}>회원가입</Button>
           <span onClick={toggleHandler}>로그인</span>
         </ScForm>
       ) : (
-        <ScForm>
+        <ScForm onSubmit={loginHandler}>
           <h1>로그인</h1>
           <div>
             <label htmlFor='id'>아이디</label>
@@ -217,9 +217,7 @@ const Login = () => {
               placeholder='영문, 숫자(4~15글자)'
             />
           </div>
-          <Button type='button' onClick={loginHandler} disabled={isValid}>
-            로그인
-          </Button>
+          <Button disabled={isValid}>로그인</Button>
           <span onClick={toggleHandler}>회원가입</span>
         </ScForm>
       )}
