@@ -7,12 +7,15 @@ const initialState = {
   isError: false,
   error: null,
 };
+const accessToken = localStorage.getItem('accessToken');
 
 export const __getFanLetter = createAsyncThunk(
   'getFanLetter',
   async (payload, thunkAPI) => {
     try {
-      const { data } = await jsonApi.get('/letters');
+      const { data } = await jsonApi.get(
+        '/letters?_sort=createdAt&_order=desc'
+      );
       return thunkAPI.fulfillWithValue(data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
@@ -86,7 +89,7 @@ const fanLetterSlice = createSlice({
     [__addFanLetter.fulfilled]: (state, action) => {
       state.isLoading = true;
       state.isError = false;
-      state.fanLetters = [...state.fanLetters, action.payload];
+      state.fanLetters = [action.payload, ...state.fanLetters];
     },
     [__addFanLetter.rejected]: (state, action) => {
       state.isLoading = false;

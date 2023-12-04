@@ -3,12 +3,14 @@ import Button from 'components/UI/Button';
 import ImgGroup from 'components/UI/ImgGroup';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateAvatar, updateNickname } from 'redux/modules/AuthSlice';
+import { logout, updateAvatar, updateNickname } from 'redux/modules/AuthSlice';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const userInfo = useSelector((state) => state.auth.profile);
   const [nickname, setNickname] = useState(userInfo.nickname);
   const [avatarFile, setAvatarFile] = useState();
@@ -29,32 +31,93 @@ const Profile = () => {
 
   // 닉네임 서버 수정
   const serverUpdateNickname = async () => {
-    const response = await api.patch(
-      '/profile',
-      { nickname: nickname },
-      {
+    try {
+      await api.get('/user', {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${accessToken}`,
         },
-      }
-    );
+      });
 
-    console.log(response);
-    // setNickname(data.nickname);
+      await api.patch(
+        '/profile',
+        { nickname: nickname },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      toast.success('수정되었습니다', {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+    } catch (error) {
+      toast.warn('토큰이 만료되었습니다. 다시 로그인해주세요', {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+      dispatch(logout());
+      navigate('/');
+    }
   };
 
   // 아바타 서버 수정
   const serverUpdateAvatar = async () => {
-    const formData = new FormData();
-    formData.append('avatar', avatarFile);
-    const { data } = await api.patch('/profile', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-    dispatch(updateAvatar(data.avatar));
+    try {
+      await api.get('/user', {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      const formData = new FormData();
+      formData.append('avatar', avatarFile);
+      const { data } = await api.patch('/profile', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      dispatch(updateAvatar(data.avatar));
+
+      toast.success('수정되었습니다', {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+    } catch (error) {
+      toast.warn('토큰이 만료되었습니다. 다시 로그인해주세요', {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+      dispatch(logout());
+      navigate('/');
+    }
   };
 
   // 아바타 수정
@@ -66,16 +129,6 @@ const Profile = () => {
   const completeAvatarEdit = () => {
     serverUpdateAvatar();
     setAvatarEditShown((infoEditShown) => !infoEditShown);
-    toast.success('수정되었습니다', {
-      position: 'top-center',
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: 'light',
-    });
   };
 
   // 아바타 수정 취소
@@ -93,16 +146,6 @@ const Profile = () => {
     serverUpdateNickname();
     dispatch(updateNickname(nickname));
     setNicknameEditShown((infoEditShown) => !infoEditShown);
-    toast.success('수정되었습니다', {
-      position: 'top-center',
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: 'light',
-    });
   };
 
   // 닉네임 수정 취소

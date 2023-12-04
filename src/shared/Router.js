@@ -29,7 +29,7 @@ const Router = () => {
           <>
             <Route path='/' element={<Layout />}>
               <Route path='/' element={<Login />} />
-              <Route path='*' element={<Navigate replace to={'/login'} />} />
+              <Route path='*' element={<Navigate replace to={'/'} />} />
             </Route>
           </>
         )}

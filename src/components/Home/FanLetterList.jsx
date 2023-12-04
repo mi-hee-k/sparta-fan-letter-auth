@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import FanLetterItem from './FanLetterItem';
 import { useSelector } from 'react-redux';
-// import { setFanLetters } from 'redux/modules/FanLettersSlice';
-// import axios from 'axios';
 
 const FanLetterList = ({ fanLetters }) => {
   const selectedMember = useSelector((state) => state.selectedMember);
