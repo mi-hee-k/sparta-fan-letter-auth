@@ -51,7 +51,7 @@ const Login = () => {
   };
 
   // 유효성 검사
-  let regId = /^[a-zA-Z]{4,10}$/;
+  let regId = /^[a-zA-Z0-9]{4,10}$/;
   let regPw = /^[a-zA-Z0-9]{4,15}$/;
   let regNickname = /^[a-zA-Z가-힣0-9]{1,10}$/;
 
@@ -68,6 +68,16 @@ const Login = () => {
       !regPw.test(inputs.password) ||
       !regNickname.test(inputs.nickname)
     ) {
+      toast.warn('양식에 맞춰 작성해주세요 😥', {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
       return;
     }
 
@@ -103,8 +113,7 @@ const Login = () => {
   };
 
   // 로그인
-  const loginHandler = async (e) => {
-    e.preventDefault();
+  const loginHandler = async () => {
     const userInfo = {
       id: inputs.id,
       password: inputs.password,
@@ -147,29 +156,29 @@ const Login = () => {
 
   return (
     <ScFormWrapper>
-      <ScForm>
-        <h1>{loginState ? '회원가입' : '로그인'}</h1>
-        <div>
-          <label htmlFor='id'>아이디</label>
-          <input
-            type='text'
-            name='id'
-            value={inputs.id}
-            onChange={inputHandler}
-            placeholder='영문(4~10글자)'
-          />
-        </div>
-        <div>
-          <label htmlFor='password'>비밀번호</label>
-          <input
-            type='password'
-            name='password'
-            value={inputs.password}
-            onChange={inputHandler}
-            placeholder='영문, 숫자포함(4~15글자)'
-          />
-        </div>
-        {loginState && (
+      {loginState ? (
+        <ScForm>
+          <h1>회원가입</h1>
+          <div>
+            <label htmlFor='id'>아이디</label>
+            <input
+              type='text'
+              name='id'
+              value={inputs.id}
+              onChange={inputHandler}
+              placeholder='영문, 숫자(4~10글자)'
+            />
+          </div>
+          <div>
+            <label htmlFor='password'>비밀번호</label>
+            <input
+              type='password'
+              name='password'
+              value={inputs.password}
+              onChange={inputHandler}
+              placeholder='영문, 숫자(4~15글자)'
+            />
+          </div>
           <div>
             <label htmlFor='pw'>닉네임</label>
             <input
@@ -180,24 +189,40 @@ const Login = () => {
               placeholder='영문, 숫자, 한글(1~10글자)'
             />
           </div>
-        )}
-        {loginState ? (
           <Button type='button' onClick={registerHandler} disabled={isValid}>
             회원가입
           </Button>
-        ) : (
-          <Button
-            type='submit'
-            onClick={(e) => loginHandler(e)}
-            disabled={isValid}
-          >
+          <span onClick={toggleHandler}>로그인</span>
+        </ScForm>
+      ) : (
+        <ScForm>
+          <h1>로그인</h1>
+          <div>
+            <label htmlFor='id'>아이디</label>
+            <input
+              type='text'
+              name='id'
+              value={inputs.id}
+              onChange={inputHandler}
+              placeholder='영문, 숫자(4~10글자)'
+            />
+          </div>
+          <div>
+            <label htmlFor='password'>비밀번호</label>
+            <input
+              type='password'
+              name='password'
+              value={inputs.password}
+              onChange={inputHandler}
+              placeholder='영문, 숫자(4~15글자)'
+            />
+          </div>
+          <Button type='button' onClick={loginHandler} disabled={isValid}>
             로그인
           </Button>
-        )}
-        <span onClick={toggleHandler}>
-          {loginState ? '로그인' : '회원가입'}
-        </span>
-      </ScForm>
+          <span onClick={toggleHandler}>회원가입</span>
+        </ScForm>
+      )}
     </ScFormWrapper>
   );
 };
