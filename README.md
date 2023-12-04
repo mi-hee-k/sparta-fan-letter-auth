@@ -29,8 +29,7 @@ React와 redux-thunk를 사용한 팬레터함 만들기
 
 
 ## 본인이 쓴 게시글만 수정 & 삭제
-![image](https://github.com/mi-hee-k/sparta-fan-letter-auth/assets/90510192/0e45968e-f204-4199-ba18-42bf3851b88c)
-
+![image](https://github.com/mi-hee-k/sparta-fan-letter-auth/assets/90510192/bed94439-dbfa-4b28-b4f5-583564b69096)
 
 
 # 💥 발생했던 오류
